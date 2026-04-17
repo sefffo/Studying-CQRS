@@ -19,7 +19,7 @@ namespace VideoGameCQRS.Controllers
         public async Task<ActionResult<int>> GetPlayers()
         {
             // Logic to retrieve players from the database
-            var players = await sender.Send(new GetPlayersQuery(0, string.Empty));
+            var players = await sender.Send(new GetPlayersQuery());
             return Ok(players);
         }
         [HttpPost]
