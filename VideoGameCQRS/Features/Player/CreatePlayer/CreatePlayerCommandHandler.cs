@@ -13,14 +13,13 @@ namespace VideoGameCQRS.Features.Player.CreatePlayer
             // Logic to create a player and return the player's ID
 
 
-            var player = new Player
+            var player = new VideoGameCQRS.Entities.Player
             {
                 Name = request.Name,
                 Level = request.Level
             };
 
-
-            await context.Players.Add(player);
+            await context.Players.AddAsync(player);
             await context.SaveChangesAsync(cancellationToken);
             return player.Id;
         }
