@@ -9,10 +9,6 @@ namespace VideoGameCQRS.Features.Player.GetAllPlayers
         public async Task<IEnumerable<Entities.Player>> Handle(GetPlayersQuery request, CancellationToken cancellationToken)
         {
             var Players = await context.Players.ToListAsync(cancellationToken);
-            if(Players == null || !Players.Any())
-            {
-                throw new Exception("No players found.");
-            }
             return Players;
         }
     }
