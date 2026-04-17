@@ -4,12 +4,14 @@ using Microsoft.EntityFrameworkCore;
 using VideoGameCQRS.Data;
 using VideoGameCQRS.Entities;
 using VideoGameCQRS.Features.Player.CreatePlayer;
+using VideoGameCQRS.Features.Player.GetAllPlayers;
+using VideoGameCQRS.Features.Player.GetPlayerById;
 
 namespace VideoGameCQRS.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PlayersController(VideoGameAppDbContext context , ISender sender) : ControllerBase
+    public class PlayersController(ISender sender) : ControllerBase
     {
 
 
@@ -17,7 +19,7 @@ namespace VideoGameCQRS.Controllers
         public async Task<ActionResult<int>> GetPlayers()
         {
             // Logic to retrieve players from the database
-            var players = await context.Players.ToListAsync();
+            var players = await sender.Send(new GetPlayersQuery(0, string.Empty));
             return Ok(players);
         }
         [HttpPost]
@@ -31,7 +33,7 @@ namespace VideoGameCQRS.Controllers
         public async Task<ActionResult<Player>> GetPlayerById(int id)
         {
             // Logic to retrieve a player by ID from the database
-            var player = await context.Players.FindAsync(id);
+            var player = await sender.Send(new GetPlayerByIdQuery(id));
             if (player == null)
             {
                 return NotFound();
