@@ -1,13 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VideoGameCQRS.Data;
 using VideoGameCQRS.Entities;
+using VideoGameCQRS.Features.Player.CreatePlayer;
 
 namespace VideoGameCQRS.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PlayersController(VideoGameAppDbContext context) : ControllerBase
+    public class PlayersController(VideoGameAppDbContext context , ISender sender) : ControllerBase
     {
 
 
@@ -19,12 +21,11 @@ namespace VideoGameCQRS.Controllers
             return Ok(players);
         }
         [HttpPost]
-        public async Task<ActionResult> CreatePlayer(Player player)
+        public async Task<ActionResult> CreatePlayer(CreatePlayerCommand createPlayer)
         {
             // Logic to create a new player in the database
-            context.Players.Add(player);
-            await context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetPlayers), new { id = player.Id }, player);
+            var playerId = await sender.Send(createPlayer);
+            return CreatedAtAction(nameof(GetPlayers), new { id = playerId }, playerId);
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<Player>> GetPlayerById(int id)

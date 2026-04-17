@@ -13,6 +13,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<VideoGameAppDbContext>(options =>
     options.UseInMemoryDatabase(databaseName: "VideoGame"));
 
+builder.Services.AddMediatR(configuration: config=>config.RegisterServicesFromAssemblies(typeof(Program).Assembly));
+
 
 var app = builder.Build();
 
